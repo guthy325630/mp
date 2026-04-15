@@ -253,6 +253,10 @@ show_header() {
 
 main_loop() {
 	init_repo_source
+	# curl … | bash 时 stdin 是管道，read 会立刻 EOF，菜单会疯狂刷新。改从终端读。
+	if [[ -r /dev/tty ]]; then
+		exec < /dev/tty
+	fi
 	while true; do
 		ensure_install_abs
 		show_header
